@@ -354,7 +354,7 @@ function template_scripts_and_styles() {
 
     // enqueue styles and scripts
     wp_enqueue_script( 'template-modernizr' );
-    wp_enqueue_style( 'template-stylesheet' );
+    // wp_enqueue_style( 'template-stylesheet' );
     wp_enqueue_style( 'template-ie-only' );
 
     $wp_styles->add_data( 'template-ie-only', 'conditional', 'lt IE 9' ); // add conditional wrapper around ie stylesheet

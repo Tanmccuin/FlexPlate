@@ -1,253 +1,226 @@
-/******************************************************************
-Site Name:
-Author:
+//
+// -- Start editing -- //
+//
 
-Stylesheet: Grid Stylesheet
+@import "_flex-mix";
 
-I've seperated the grid so you can swap it out easily. It's
-called at the top the style.scss stylesheet.
+// Set the number of columns you want to use on your layout.
+$flexboxgrid-grid-columns: 12 !default;
+// Set the gutter between columns.
+$flexboxgrid-gutter-width: 1rem !default;
+// Set a margin for the container sides.
+$flexboxgrid-outer-margin: 2rem !default;
+// Create or remove breakpoints for your project
+// Syntax:
+// name SIZErem,
+$flexboxgrid-breakpoints:
+  sm 48em 46rem,
+  md 62em 61rem,
+  lg 75em 71rem !default; 
+$flexboxgrid-max-width: 1200px !default;
 
-There are a ton of grid solutions out there. You should definitely
-experiment with your own. Here are some recommendations:
+//
+// -- Stop editing -- //
+//
 
-http://gridsetapp.com - Love this site. Responsive Grids made easy.
-http://susy.oddbird.net/ - Grids using Compass. Very elegant.
-http://gridpak.com/ - Create your own responsive grid.
-https://github.com/dope/lemonade - Neat lightweight grid.
+$gutter-compensation: $flexboxgrid-gutter-width * .5 * -1;
+$half-gutter-width: $flexboxgrid-gutter-width * .5;
 
-
-The grid below is a custom built thingy I modeled a bit after
-Gridset. It's VERY basic and probably shouldn't be used on
-your client projects. The idea is you learn how to roll your
-own grids. It's better in the long run and allows you full control
-over your project's layout.
-
-******************************************************************/
-
-// using a mixin since we can't use placeholder selectors
-@mixin grid-col {
-  float: left;
-  padding-right: 0.75em;
-
+.wrapper {
+  box-sizing: border-box;
+  max-width: $flexboxgrid-max-width;
+  margin: 0 auto;
 }
 
-// the last column
-.last-col {
-  float: right;
-  padding-right: 0 !important;
+.container-fluid, .container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $flexboxgrid-outer-margin;
+  padding-left: $flexboxgrid-outer-margin;
 }
 
 
-/*
-Mobile Grid Styles
-These are the widths for the mobile grid.
-There are four types, but you can add or customize
-them however you see fit.
-*/
-@media (max-width: 767px) {
 
-  .m-all {
-    @include grid-col;
-    width: 100%;
-    padding-right: 0;
+.row {
+  box-sizing: border-box;
+  @include flexbox();
+  @include flex(0, 1, auto);
+  @include flex-direction(row);
+  @include flex-wrap(wrap);
+  margin-right: $gutter-compensation;
+  margin-left: $gutter-compensation;
+}
+
+.row.reverse {
+  @include flex-direction(row-reverse);
+}
+
+.col.reverse {
+  @include flex-direction(column-reverse);
+}
+
+@mixin flexboxgrid-sass-col-common {
+  box-sizing: border-box;
+
+  // split @include flex(0, 0, auto) into individual props
+  @include flex-grow(0);
+  @include flex-shrink(0);
+
+  // we leave @include flex-basis(auto) out of common because
+  // in some spots we need it and some we dont
+  // more why here: https://github.com/kristoferjoseph/flexboxgrid/issues/126
+
+  padding-right: $half-gutter-width;
+  padding-left: $half-gutter-width;
+}
+
+$name: xs;
+.col-#{$name} {
+  @include flexboxgrid-sass-col-common;
+  @include flex-basis(auto);
+}
+@for $i from 1 through $flexboxgrid-grid-columns {
+  .col-#{$name}-#{$i} {
+    @include flexboxgrid-sass-col-common;
+    @include flex-basis(100% / $flexboxgrid-grid-columns * $i);
+    max-width: 100% / $flexboxgrid-grid-columns * $i;
   }
-
-  .m-1of2 {
-    @include grid-col;
-    width: 50%;
+}
+@for $i from 0 through $flexboxgrid-grid-columns {
+  .col-#{$name}-offset-#{$i} {
+    @include flexboxgrid-sass-col-common;
+    @if $i == 0 {
+      margin-left: 0; 
+    } @else {
+      margin-left: 100% / $flexboxgrid-grid-columns * $i;
+    }
   }
+}
+.col-#{$name} {
+  @include flex-grow(1);
+  @include flex-basis(0);
+  max-width: 100%;
+}
+.start-#{$name} {
+  @include justify-content(flex-start);
+  text-align: left;
+}
 
-  .m-1of3 {
-    @include grid-col;
-    width: 33.33%;
+.center-#{$name} {
+  @include justify-content(center);
+  text-align: center;
+}
+
+.end-#{$name} {
+  @include justify-content(flex-end);
+  text-align: right;
+}
+
+.top-#{$name} {
+  @include align-items(flex-start);
+}
+
+.middle-#{$name} {
+  @include align-items(center);
+}
+
+.bottom-#{$name} {
+  @include align-items(flex-end);
+}
+
+.around-#{$name} {
+  @include justify-content(space-around);
+}
+
+.between-#{$name} {
+  @include justify-content(space-between);
+}
+
+.first-#{$name} {
+  order: -1;
+}
+
+.last-#{$name} {
+  order: 1;
+}
+
+
+@each $breakpoint in $flexboxgrid-breakpoints {
+  $name: nth($breakpoint, 1);
+  $size: nth($breakpoint, 2);
+  $container: nth($breakpoint, 3);
+  @media only screen and (min-width: $size) {
+    .container {
+      width: $container;
+    }
+
+    .col-#{$name} {
+      @include flexboxgrid-sass-col-common;
+      @include flex-basis(auto);
+    }
+    @for $i from 1 through $flexboxgrid-grid-columns {
+      .col-#{$name}-#{$i} {
+        @include flexboxgrid-sass-col-common;
+        @include flex-basis(100% / $flexboxgrid-grid-columns * $i);
+        max-width: 100% / $flexboxgrid-grid-columns * $i;
+      }
+    }
+    @for $i from 0 through $flexboxgrid-grid-columns {
+      .col-#{$name}-offset-#{$i} {
+        @include flexboxgrid-sass-col-common;
+        @if $i == 0 {
+          margin-left: 0;
+        } @else {
+          margin-left: 100% / $flexboxgrid-grid-columns * $i;
+        }
+      }
+    }
+    .col-#{$name} {
+      @include flex-grow(1);
+      @include flex-basis(0);
+      max-width: 100%;
+    }
+    .start-#{$name} {
+      @include justify-content(flex-start);
+      text-align: left;
+    }
+
+    .center-#{$name} {
+      @include justify-content(center);
+      text-align: center;
+    }
+
+    .end-#{$name} {
+      @include justify-content(flex-end);
+      text-align: right;
+    }
+
+    .top-#{$name} {
+      @include align-items(flex-start);
+    }
+
+    .middle-#{$name} {
+      @include align-items(center);
+    }
+
+    .bottom-#{$name} {
+      @include align-items(flex-end);
+    }
+
+    .around-#{$name} {
+      @include justify-content(space-around);
+    }
+
+    .between-#{$name} {
+      @include justify-content(space-between);
+    }
+
+    .first-#{$name} {
+      order: -1;
+    }
+
+    .last-#{$name} {
+      order: 1;
+    }
   }
-
-  .m-2of3 {
-    @include grid-col;
-    width: 66.66%;
-  }
-
-  .m-1of4 {
-    @include grid-col;
-    width: 25%;
-  }
-
-  .m-3of4 {
-    @include grid-col;
-    width: 75%;
-  }
-
-} // end mobile styles
-
-
-/* Portrait tablet to landscape */
-@media (min-width: 768px) and (max-width: 1029px) {
-
-  .t-all {
-    @include grid-col;
-    width: 100%;
-    padding-right: 0;
-  }
-
-  .t-1of2 {
-    @include grid-col;
-    width: 50%;
-  }
-
-  .t-1of3 {
-    @include grid-col;
-    width: 33.33%;
-  }
-
-  .t-2of3 {
-    @include grid-col;
-    width: 66.66%;
-  }
-
-  .t-1of4 {
-    @include grid-col;
-    width: 25%;
-  }
-
-  .t-3of4 {
-    @include grid-col;
-    width: 75%;
-  }
-
-  .t-1of5 {
-    @include grid-col;
-    width: 20%;
-  }
-
-  .t-2of5 {
-    @include grid-col;
-    width: 40%;
-  }
-
-  .t-3of5 {
-    @include grid-col;
-    width: 60%;
-  }
-
-  .t-4of5 {
-    @include grid-col;
-    width: 80%;
-  }
-
-} // end tablet
-
-/* Landscape to small desktop */
-@media (min-width: 1030px) {
-
-  .d-all  {
-    @include grid-col;
-    width: 100%;
-    padding-right: 0;
-  }
-
-  .d-1of2 {
-    @include grid-col;
-    width: 50%;
-  }
-
-  .d-1of3 {
-    @include grid-col;
-    width: 33.33%;
-  }
-
-  .d-2of3 {
-    @include grid-col;
-    width: 66.66%;
-  }
-
-  .d-1of4 {
-    @include grid-col;
-    width: 25%;
-  }
-
-  .d-3of4 {
-    @include grid-col;
-    width: 75%;
-  }
-
-  .d-1of5 {
-    @include grid-col;
-    width: 20%;
-  }
-
-  .d-2of5 {
-    @include grid-col;
-    width: 40%;
-  }
-
-  .d-3of5 {
-    @include grid-col;
-    width: 60%;
-  }
-
-  .d-4of5 {
-    @include grid-col;
-    width: 80%;
-  }
-
-  .d-1of6 {
-    @include grid-col;
-    width: 16.6666666667%;
-  }
-
-  .d-1of7 {
-    @include grid-col;
-    width: 14.2857142857%;
-  }
-
-  .d-2of7 {
-    @include grid-col;
-    width: 28.5714286%;
-  }
-
-  .d-3of7 {
-    @include grid-col;
-    width: 42.8571429%;
-  }
-
-  .d-4of7 {
-    @include grid-col;
-    width: 57.1428572%;
-  }
-
-  .d-5of7 {
-    @include grid-col;
-    width: 71.4285715%;
-  }
-
-  .d-6of7 {
-    @include grid-col;
-    width: 85.7142857%;
-  }
-
-  .d-1of8 {
-    @include grid-col;
-    width: 12.5%;
-  }
-
-  .d-1of9 {
-    @include grid-col;
-    width: 11.1111111111%;
-  }
-
-  .d-1of10 {
-    @include grid-col;
-    width: 10%;
-  }
-
-  .d-1of11 {
-    @include grid-col;
-    width: 9.09090909091%;
-  }
-
-  .d-1of12 {
-    @include grid-col;
-    width: 8.33%;
-  }
-
-} // end desktop styles
+}

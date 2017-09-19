@@ -39,6 +39,8 @@
 
 		<?php // wordpress head functions ?>
 		<?php wp_head(); ?>
+		<?php $random_number = wp_rand( 1, 400 ); ?>
+		<link rel="stylesheet" href="<?php echo get_theme_file_uri(); ?>/library/css/style.css?v=<?php echo $random_number ?>">
 		<?php // end of wordpress head ?>
 
 		<?php // drop Google Analytics Here ?>
@@ -65,9 +67,9 @@
 
             	} ?> -->
 
-			<header class="header" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+			<header class="header container" role="banner" itemscope itemtype="http://schema.org/WPHeader">
 
-				<div id="inner-header" class="wrap cf">
+				<div id="inner-header" class="row">
 
 					<?php // You can use text or a logo (or both) in your header. Uncomment the below to use text. ?>
 					<div id="site-title" class="h1"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></div>
