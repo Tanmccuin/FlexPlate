@@ -41,6 +41,12 @@
 		<?php wp_head(); ?>
 		<?php $random_number = wp_rand( 1, 400 ); ?>
 		<link rel="stylesheet" href="<?php echo get_theme_file_uri(); ?>/library/css/style.css?v=<?php echo $random_number ?>">
+
+		<!--Import Google Icon Font-->
+		
+	    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="<?php echo get_theme_file_uri(); ?>/library/css/materialize.css?v=<?php echo $random_number ?>">
+		
 		<?php // end of wordpress head ?>
 
 		<?php // drop Google Analytics Here ?>
@@ -67,7 +73,7 @@
 
             	} ?> -->
 
-			<header class="header container" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+			<header class="header container-fluid" role="banner" itemscope itemtype="http://schema.org/WPHeader">
 
 				<div id="inner-header" class="row">
 

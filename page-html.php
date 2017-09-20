@@ -261,9 +261,9 @@
 
                      <section>
                        <h2 class="other-class">Buttons</h2>
-                       <button>Regular Button</button>
-                       <button class="purple-btn">Purple Button</button>
-                       <button>Large Blue Button</button>
+                       <button class="waves-effect waves-light btn-large">Regular Button</button>
+                       <button class="waves-effect waves-light btn-large">Purple Button</button>
+                       <button class="waves-effect waves-light btn-large">Large Blue Button</button>
                      </section>
 
                      <hr />
